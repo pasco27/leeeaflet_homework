@@ -20,32 +20,34 @@ L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?acce
 // linking up to the USGS site
 var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
-
-
-// Function that will determine the color of the earthquake (this is example from borough)
 // Objective is to plot earthquakes with higher magnitudes as larger circles,
 // while earthquakes with greater depth should appear darker in color.
-function chooseColor(mag) {
-    switch (borough) {
-        case "Brooklyn":
-            return "yellow";
-        case "Bronx":
-            return "red";
-        case "Manhattan":
-            return "orange";
-        case "Queens":
-            return "green";
-        case "Staten Island":
-            return "purple";
+
+// Function that will determine the color of the earthquake (this is example from borough example)
+function chooseColor(magnitude) {
+    switch (magnitude) {
+        case magnitude < 1:
+            return "#F5FFFA";
+        case magnitude < 2:
+            return "#98FB98";
+        case magnitude < 3:
+            return "#3CB371";
+        case magnitude < 4:
+            return "#FA8072";
+        case magnitude < 5:
+            return "#FF0000";
+        case magnitude > 5:
+            return "#8B0000";
         default:
             return "black";
     }
 }
 
+// .. now need to size circles 
 
 
 // Grabbing the GeoJSON data and adding for each earthquake 
-d3.json(link).then(function (response) {
+d3.json(link).then(function (data) {
     // Creating a geoJSON layer with the retrieved data
     L.geoJson(data, {
         // Style each feature (in this case a neighborhood)
@@ -53,9 +55,10 @@ d3.json(link).then(function (response) {
             return {
                 color: "white",
                 // Call the chooseColor function to decide which color to color our neighborhood (color based on borough)
-                fillColor: chooseColor(feature.properties.borough),
+                fillColor: chooseColor(feature.properties.mag),
                 fillOpacity: 0.5,
-                weight: 1.5
+                weight: 1.5,
+                radius: (feature.properties.mag) * 10
             };
         },
 
@@ -83,7 +86,7 @@ d3.json(link).then(function (response) {
                 }
             });
             // Giving each feature a pop-up with information pertinent to it
-            layer.bindPopup("<h1>" + feature.properties.neighborhood + "</h1> <hr> <h2>" + feature.properties.borough + "</h2>");
+            layer.bindPopup("<h1>" + feature.properties.place + "</h1> <hr> <h2>" + feature.properties.mag + "</h2>");
 
         }
     }).addTo(map);
