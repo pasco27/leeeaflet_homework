@@ -1,7 +1,7 @@
 // Creating our initial map object
 
 // L.map accepts 2 arguments: id of the HTML element to insert the map, and an object containing the initial options for the new map
-var myMap = L.map("map", {
+var myMap = L.map("mapid", {
     center: [39.82, -98.58], // chose geo center of the US
     zoom: 5
     // layers: [myMap, ]
@@ -14,7 +14,7 @@ var myMap = L.map("map", {
 L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 15,
-    id: "dark-v10",
+    id: "streets-v11",
     accessToken: API_KEY
 }).addTo(myMap);
 
@@ -26,7 +26,6 @@ var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.g
 
 // Function that will determine the color of the earthquake (this is example from borough example)
 
-var depth = data.geometry.coordinates[2]
 
 
 
@@ -56,16 +55,26 @@ function chooseColor(depth) {
 d3.json(link).then(function (data) {
     console.log(data)
 
-    features.forEach(function (data) {
+    var data_features = data.features
+
+    // var depth = data.features[0].geometry.coordinates
+    // console.log(depth)
+
+    data_features.forEach(function (data) {
+
+        console.log(data.geometry.coordinates[1]);
+
         L.circle([data.geometry.coordinates[1], data.geometry.coordinates[0]], {
-            radius: data.features.properties.mag * 10,
+
+            radius: data.properties.mag * 10,
             color: 'black',
             fillColor: chooseColor(data.geometry.coordinates[2]),
 
             // if(data.geometry)
 
-        }).bindPopup("<h1>" + feature.properties.place + "</h1> <hr> <h2>" + feature.properties.mag + "</h2>")
-    }).addTo(map);
+        }).bindPopup("<h1>" + data.properties.place + "</h1> <hr> <h2>" + data.properties.mag + "</h2>")
+            .addTo(myMap);
+    });
 
 
 
