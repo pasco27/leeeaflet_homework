@@ -1,4 +1,5 @@
 // Creating our initial map object
+console.log(1)
 
 // L.map accepts 2 arguments: id of the HTML element to insert the map, and an object containing the initial options for the new map
 var myMap = L.map("mapid", {
@@ -11,12 +12,30 @@ var myMap = L.map("mapid", {
 // Adding a tile layer (the background map image) to our map.
 // We use the addTo method to add objects to our map
 // Documentation for tileLayer:https://leafletjs.com/reference-1.6.0.html#tilelayer
-L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 15,
-    id: "streets-v11",
-    accessToken: API_KEY
-}).addTo(myMap);
+// L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+//     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+//     maxZoom: 15,
+//     id: "streets-v11",
+//     accessToken: API_KEY
+// }).addTo(myMap);
+
+
+// BCS support here
+var graymap = L.tileLayer(
+    "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
+    {
+        attribution:
+            "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+        tileSize: 512,
+        maxZoom: 18,
+        zoomOffset: -1,
+        id: "mapbox/light-v10",
+        accessToken: API_KEY
+    }
+);
+graymap.addTo(myMap);
+
+console.log(2)
 
 // linking up to the USGS site
 var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
@@ -24,10 +43,9 @@ var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.g
 // Objective is to plot earthquakes with higher magnitudes as larger circles,
 // while earthquakes with greater depth should appear darker in color.
 
+console.log(3)
+
 // Function that will determine the color of the earthquake (this is example from borough example)
-
-
-
 
 function chooseColor(depth) {
     switch (true) {
