@@ -39,9 +39,9 @@ function chooseColor(depth) {
             return "#3CB371";
         case depth < 60:
             return "#FA8072";
-        case depth < 85:
+        case depth < 75:
             return "#FF0000";
-        case depth > 100:
+        case depth > 90:
             return "#8B0000";
         default:
             return "black";
@@ -64,24 +64,44 @@ d3.json(link).then(function (data) {
 
         console.log(data.geometry.coordinates[1]);
 
+
         L.circle([data.geometry.coordinates[1], data.geometry.coordinates[0]], {
 
             radius: data.properties.mag * 10,
             color: 'black',
             fillColor: chooseColor(data.geometry.coordinates[2]),
 
-            // if(data.geometry)
 
         }).bindPopup("<h1>" + data.properties.place + "</h1> <hr> <h2>" + data.properties.mag + "</h2>")
             .addTo(myMap);
+
     });
 
 
 
 
+    // for the legend, leaflet has custom legend control that I can play with once I get it working correctly:
+    // https://leafletjs.com/examples/choropleth/
 
+    var legend = L.control({ position: 'bottomright' });
 
+    legend.onAdd = function (map) {
 
+        var div = L.DomUtil.create('div', 'info legend'),
+            depthStat = [-15, 15, 30, 45, 60, 75, 90, 105],
+            labels = [];
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < depthStat.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + chooseColor(depthStat[i] + 1) + '"></i> ' +
+                depthStat[i] + (depthStat[i + 1] ? '&ndash;' + depthStat[i + 1] + '<br>' : '+');
+        }
+
+        return div;
+    };
+
+    legend.addTo(myMap);
 
 
 
