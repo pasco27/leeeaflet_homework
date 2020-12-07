@@ -82,6 +82,13 @@ d3.json(link).then(function (data) {
 
 
 
+
+
+
+
+
+
+
     // this was stuff continued from borough example... 
 
     // Creating a geoJSON layer with the retrieved data
