@@ -59,10 +59,12 @@ function chooseColor(depth) {
             return "#FA8072";
         case depth < 75:
             return "#FF0000";
-        case depth > 90:
+        case depth < 90:
             return "#8B0000";
-        default:
+        case depth > 90:
             return "black";
+        default:
+            return "white";
     }
 }
 
@@ -82,12 +84,14 @@ d3.json(link).then(function (data) {
 
         console.log(data.geometry.coordinates[1]);
 
+        // through many hours of experimentation I found this is 1,0; not 0, 1!
+        L.circle([data.geometry.coordinates[1], data.geometry.coordinates[0]], {
 
-        L.circle([data.geometry.coordinates[0], data.geometry.coordinates[1]], {
-
-            radius: data.properties.mag * 10,
+            radius: data.properties.mag * 30000,
             color: 'black',
             fillColor: chooseColor(data.geometry.coordinates[2]),
+            fillOpacity: 0.85,
+            weight: 1.5
 
 
         }).bindPopup("<h1>" + data.properties.place + "</h1> <hr> <h2>" + data.properties.mag + "</h2>")
@@ -106,7 +110,7 @@ d3.json(link).then(function (data) {
     legend.onAdd = function (map) {
 
         var div = L.DomUtil.create('div', 'info legend'),
-            depthStat = [-15, 15, 30, 45, 60, 75, 90, 105],
+            depthStat = [-15, 15, 30, 45, 60, 75, 90],
             labels = [];
 
         // loop through our density intervals and generate a label with a colored square for each interval
