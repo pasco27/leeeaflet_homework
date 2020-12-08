@@ -83,7 +83,7 @@ d3.json(link).then(function (data) {
         console.log(data.geometry.coordinates[1]);
 
 
-        L.circle([data.geometry.coordinates[1], data.geometry.coordinates[0]], {
+        L.circle([data.geometry.coordinates[0], data.geometry.coordinates[1]], {
 
             radius: data.properties.mag * 10,
             color: 'black',
